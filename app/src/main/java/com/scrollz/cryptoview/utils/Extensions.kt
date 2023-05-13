@@ -4,7 +4,9 @@ import com.scrollz.cryptoview.domain.model.dto.CoinDTO
 import com.scrollz.cryptoview.domain.model.Coin
 import com.scrollz.cryptoview.domain.model.CoinView
 import com.scrollz.cryptoview.domain.model.DetailedCoin
+import com.scrollz.cryptoview.domain.model.Tick
 import com.scrollz.cryptoview.domain.model.dto.CoinInfoDTO
+import com.scrollz.cryptoview.domain.model.dto.TickDTO
 import kotlin.math.abs
 
 fun Double.toPercentFormat(): String {
@@ -106,6 +108,17 @@ fun createDetailedCoin(coin: CoinDTO, coinInfo: CoinInfoDTO): DetailedCoin {
         priceATH = coin.quotes.usd.athPrice,
         percentFromATHPrice = coin.quotes.usd.percentFromPriceAth,
         last_updated = coin.lastUpdated
+    )
+}
+
+fun TickDTO.toTick(coinID: String, period: String): Tick {
+    return Tick(
+        coinID = coinID,
+        period = period,
+        timestamp = timestamp,
+        price = price,
+        volume24h = volume24h,
+        marketCap = marketCap
     )
 }
 

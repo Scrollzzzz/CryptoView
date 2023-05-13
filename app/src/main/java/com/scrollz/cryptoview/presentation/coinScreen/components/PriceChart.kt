@@ -26,23 +26,18 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import com.scrollz.cryptoview.domain.model.Tick
 import com.scrollz.cryptoview.ui.theme.BrightGray
 import com.scrollz.cryptoview.ui.theme.Gold
 
 @Composable
-fun PriceChart() {
+fun PriceChart(
+    ticks: List<Tick>
+) {
     val height = LocalConfiguration.current.screenWidthDp.dp * 3/4
 
-    val infos = listOf(
-        27590.61, 27499.68, 27709.15, 27854.17,
-        27681.76, 27603.03, 27678.87, 27592.32,
-        27584.57, 27580.85, 27491.04, 27496.57,
-        27512.24, 27537.81, 27555.8, 27452.07,
-        27441.6, 27484.68, 27478.29, 27504.62,
-        27415.15, 27242.93, 27191.63, 27219.93
-    )
-    val highValue = remember(infos) { infos.max() }
-    val lowValue = remember(infos) { infos.min() }
+    val highValue = remember(ticks) { ticks.maxOf { it.price } }
+    val lowValue = remember(ticks) { ticks.minOf { it.price } }
 
     Surface(
         shape = RoundedCornerShape(32.dp),
@@ -57,14 +52,15 @@ fun PriceChart() {
             Canvas(modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 32.dp)) {
-                val spacePerHour = size.width / (infos.size - 1)
+                val spacePerHour = size.width / (ticks.size - 1)
                 val chartHeight = size.height - 32.dp.toPx()
 
                 val strokePath = Path().apply {
-                    for (i in infos.indices) {
-                        val nextI = infos.getOrNull(i + 1) ?: infos.last()
 
-                        val leftRatio = (infos[i] - lowValue) / (highValue - lowValue)
+                    for (i in ticks.indices) {
+                        val nextI = ticks.getOrNull(i + 1)?.price ?: ticks.last().price
+
+                        val leftRatio = (ticks[i].price - lowValue) / (highValue - lowValue)
                         val rightRatio = (nextI - lowValue) / (highValue - lowValue)
 
                         val x1 = i * spacePerHour

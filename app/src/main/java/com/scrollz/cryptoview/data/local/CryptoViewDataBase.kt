@@ -5,8 +5,12 @@ import androidx.room.RoomDatabase
 import com.scrollz.cryptoview.domain.model.Coin
 import com.scrollz.cryptoview.domain.model.DetailedCoin
 import com.scrollz.cryptoview.domain.model.FavoriteCoin
+import com.scrollz.cryptoview.domain.model.Tick
 
-@Database(entities = [Coin::class, DetailedCoin::class, FavoriteCoin::class], version = 4)
+@Database(
+    entities = [Coin::class, DetailedCoin::class, FavoriteCoin::class, Tick::class],
+    version = 5
+)
 
 abstract class CryptoViewDataBase : RoomDatabase() {
     abstract fun cryptoViewDao(): CryptoViewDao

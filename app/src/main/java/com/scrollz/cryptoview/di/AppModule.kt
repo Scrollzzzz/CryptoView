@@ -7,11 +7,13 @@ import com.google.gson.GsonBuilder
 import com.scrollz.cryptoview.data.local.CryptoViewDataBase
 import com.scrollz.cryptoview.data.remote.CoinApi
 import com.scrollz.cryptoview.data.remote.CoinPaprikaApi
+import com.scrollz.cryptoview.data.remote.TimeApi
 import com.scrollz.cryptoview.data.repository.CryptoViewRepositoryImpl
 import com.scrollz.cryptoview.domain.repository.CryptoViewRepository
 import com.scrollz.cryptoview.domain.use_case.GetCoins
 import com.scrollz.cryptoview.domain.use_case.GetDetailedCoin
 import com.scrollz.cryptoview.domain.use_case.GetFavorites
+import com.scrollz.cryptoview.domain.use_case.GetHistoricalTicks
 import com.scrollz.cryptoview.domain.use_case.IsCoinFavorite
 import com.scrollz.cryptoview.domain.use_case.ToggleFavorite
 import com.scrollz.cryptoview.domain.use_case.UseCases
@@ -84,12 +86,24 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideTimeApi(okHttpClient: OkHttpClient, gson: Gson): TimeApi {
+        return Retrofit.Builder()
+            .baseUrl(Constants.TIME_API_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(okHttpClient)
+            .build()
+            .create(TimeApi::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideCryptoViewRepository(
         coinPaprikaApi: CoinPaprikaApi,
         coinApi: CoinApi,
+        timeApi: TimeApi,
         db: CryptoViewDataBase
     ): CryptoViewRepository {
-        return CryptoViewRepositoryImpl(coinPaprikaApi, coinApi, db)
+        return CryptoViewRepositoryImpl(coinPaprikaApi, coinApi, timeApi, db)
     }
 
     @Provides
@@ -98,6 +112,7 @@ object AppModule {
         return UseCases(
             getCoins = GetCoins(repository),
             getDetailedCoin = GetDetailedCoin(repository),
+            getHistoricalTicks = GetHistoricalTicks(repository),
             getFavorites = GetFavorites(repository),
             isCoinFavorite = IsCoinFavorite(repository),
             toggleFavorite = ToggleFavorite(repository)

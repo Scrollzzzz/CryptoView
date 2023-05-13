@@ -81,8 +81,10 @@ fun CoinScreen(
                                 price = state.coin.price,
                                 percentChange24h = state.coin.percentChange24h
                             )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            PriceChart()
+                            if (state.ticks.isNotEmpty()) {
+                                Spacer(modifier = Modifier.height(16.dp))
+                                PriceChart(ticks = state.ticks)
+                            }
                             Spacer(modifier = Modifier.height(16.dp))
                             MoreInfo(
                                 marketCap = state.coin.marketCap,

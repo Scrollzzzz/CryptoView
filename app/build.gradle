@@ -101,6 +101,9 @@ dependencies {
 
     // Coil Compose
     implementation "io.coil-kt:coil-compose:2.3.0"
+
+    // Date Time
+    implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
 }
 
 kapt {
