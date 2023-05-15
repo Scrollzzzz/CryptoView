@@ -1,5 +1,8 @@
 package com.scrollz.cryptoview.presentation.coinScreen.components
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,13 +19,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import com.scrollz.cryptoview.presentation.coinScreen.PeriodFilter
 import com.scrollz.cryptoview.ui.theme.Green
 import com.scrollz.cryptoview.ui.theme.Red
 import com.scrollz.cryptoview.utils.toPercentFormat
@@ -44,7 +48,11 @@ fun MainInfo(
     iconUrl: String,
     type: String,
     price: Double,
-    percentChange24h: Double
+    percentChange24h: Double,
+    percentChange7d: Double,
+    percentChange30d: Double,
+    percentChange1y: Double,
+    periodFilter: PeriodFilter
 ) {
 
     Surface(
@@ -74,7 +82,12 @@ fun MainInfo(
             Spacer(modifier = Modifier.height(16.dp))
             PriceRow(
                 price = price,
-                percentChange24h = percentChange24h
+                percentChange = when(periodFilter) {
+                    is PeriodFilter.Day -> percentChange24h
+                    is PeriodFilter.Week -> percentChange7d
+                    is PeriodFilter.Month -> percentChange30d
+                    is PeriodFilter.Year -> percentChange1y
+                }
             )
         }
 
@@ -167,18 +180,13 @@ fun TagItem(
 @Composable
 fun PriceRow(
     price: Double,
-    percentChange24h: Double
+    percentChange: Double
 ) {
-    val percentColor = when {
-        percentChange24h > 0.0 -> Green
-        percentChange24h < 0.0 -> Red
-        else -> MaterialTheme.colorScheme.onSecondary
-    }
-    val percentIcon = when {
-        percentChange24h > 0.0 -> Icons.Default.ArrowDropUp
-        percentChange24h < 0.0 -> Icons.Default.ArrowDropDown
-        else -> Icons.Default.Remove
-    }
+
+    val percentColor by animateColorAsState(
+        targetValue = if (percentChange >= 0.0) Green else Red,
+        animationSpec = tween(200)
+    )
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -201,14 +209,20 @@ fun PriceRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
-                Icon(
-                    modifier = Modifier.size(18.dp),
-                    imageVector = percentIcon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.background
-                )
+                Crossfade(
+                    targetState = percentChange,
+                    animationSpec = tween(200)
+                ) { percentChange ->
+                    Icon(
+                        modifier = Modifier.size(18.dp),
+                        imageVector = if (percentChange >= 0.0) Icons.Default.ArrowDropUp
+                                        else Icons.Default.ArrowDropDown,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.background
+                    )
+                }
                 Text(
-                    text = percentChange24h.toPercentFormat(),
+                    text = percentChange.toPercentFormat(),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.background
                 )

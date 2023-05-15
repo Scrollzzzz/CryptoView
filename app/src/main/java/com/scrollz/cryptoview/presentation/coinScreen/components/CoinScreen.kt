@@ -22,7 +22,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.scrollz.cryptoview.presentation.coinScreen.CoinEvent
 import com.scrollz.cryptoview.presentation.coinScreen.CoinState
-import com.scrollz.cryptoview.presentation.common.ErrorScreen
+import com.scrollz.cryptoview.presentation.common.ErrorBox
 import com.scrollz.cryptoview.presentation.common.LoadingBox
 import com.scrollz.cryptoview.presentation.common.Status
 
@@ -44,11 +44,17 @@ fun CoinScreen(
                 LoadingBox(backgroundColor = MaterialTheme.colorScheme.background)
             }
             is Status.Error -> {
-                ErrorScreen()
+                ErrorBox(
+                    backgroundColor = MaterialTheme.colorScheme.background,
+                    text = "Error"
+                )
             }
             is Status.Normal -> {
                 if (state.coin == null) {
-                    ErrorScreen()
+                    ErrorBox(
+                        backgroundColor = MaterialTheme.colorScheme.background,
+                        text = "Error"
+                    )
                 }
                 else {
                     Scaffold(
@@ -79,12 +85,24 @@ fun CoinScreen(
                                 iconUrl = state.coin.iconUrl,
                                 type = state.coin.type,
                                 price = state.coin.price,
-                                percentChange24h = state.coin.percentChange24h
+                                percentChange24h = state.coin.percentChange24h,
+                                percentChange7d = state.coin.percentChange7d,
+                                percentChange30d = state.coin.percentChange30d,
+                                percentChange1y = state.coin.percentChange1y,
+                                periodFilter = state.periodFilter
                             )
-                            if (state.ticks.isNotEmpty()) {
-                                Spacer(modifier = Modifier.height(16.dp))
-                                PriceChart(ticks = state.ticks)
-                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            PeriodFilterRow(
+                                periodFilter = state.periodFilter,
+                                onFilterClick = { periodFilter ->
+                                    onEvent(CoinEvent.ChoosePeriodFilter(periodFilter))
+                                }
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            PriceChart(
+                                status = state.chartStatus,
+                                ticks = state.ticks
+                            )
                             Spacer(modifier = Modifier.height(16.dp))
                             MoreInfo(
                                 marketCap = state.coin.marketCap,

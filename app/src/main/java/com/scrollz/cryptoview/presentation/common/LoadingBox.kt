@@ -22,7 +22,7 @@ fun LoadingBox(
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.primary,
             strokeWidth = 2.dp
         )
     }

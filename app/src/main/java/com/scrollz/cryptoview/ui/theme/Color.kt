@@ -7,7 +7,7 @@ val Gray = Color(0xFF181818)        // Surface
 val LightGray = Color(0xFF282828)   // Secondary
 val BrightGray = Color(0xFF8F8F8F)  // SecondaryVariant
 val White = Color(0xFFDEDEDE)       // OnBackground
-val Gold = Color(0xFFFFD700)        // Primary
+val Gold = Color(0xFFb59410)        // Primary //FFD700
 
 val Scream = Color(0x401E1E1E)
 

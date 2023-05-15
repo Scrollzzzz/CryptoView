@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.scrollz.cryptoview.domain.model.HistoricalTicks
+import com.scrollz.cryptoview.domain.model.Tick
 import com.scrollz.cryptoview.domain.use_case.UseCases
 import com.scrollz.cryptoview.presentation.common.Status
 import com.scrollz.cryptoview.utils.Resource
@@ -41,6 +43,12 @@ class CoinViewModel @Inject constructor(
         when(event) {
             is CoinEvent.ToggleFavorite -> {
                 toggleFavorite()
+            }
+            is CoinEvent.ChoosePeriodFilter -> {
+                _coinState.value = _coinState.value.copy(
+                    periodFilter = event.periodFilter
+                )
+                _periodFilterState.value = event.periodFilter
             }
         }
     }
@@ -84,70 +92,52 @@ class CoinViewModel @Inject constructor(
                 is Resource.Success -> {
                     result.data?.let { ticks ->
                         _coinState.value = _coinState.value.copy(
-                            ticks = when(period) {
-                                is PeriodFilter.Day -> ticks.day
-                                is PeriodFilter.Week -> {
-                                    val startTick = Instant
-                                        .parse(ticks.year.maxOf { it.timestamp })
-                                        .minus(7, DateTimeUnit.DAY, TimeZone.UTC)
-                                    val t = ticks.year.filter { tick ->
-                                        Instant.parse(tick.timestamp) > startTick
-                                    }
-                                    Log.e("chartV",  "${t.size}")
-                                    t
-                                }
-                                is PeriodFilter.Month -> {
-                                    val startTick = Instant
-                                        .parse(ticks.year.maxOf { it.timestamp })
-                                        .minus(DateTimeUnit.MONTH, TimeZone.UTC)
-                                    val t = ticks.year.filter { tick ->
-                                        Instant.parse(tick.timestamp) > startTick
-                                    }
-                                    Log.e("chartV",  "${t.size}")
-                                    t
-                                }
-                                is PeriodFilter.Year -> ticks.year
-                            }
+                            chartStatus = Status.Normal,
+                            ticks = ticksOverPeriod(ticks, period)
                         )
                     }
                     Log.e("chart", "suc ${result.data}")
                 }
                 is Resource.Loading -> {
+                    _coinState.value = _coinState.value.copy(
+                        chartStatus = Status.Loading,
+                    )
                     Log.e("chart", "load")
                 }
                 is Resource.Error -> {
                     result.data?.let { ticks ->
                         _coinState.value = _coinState.value.copy(
-                            ticks = when(period) {
-                                is PeriodFilter.Day -> ticks.day
-                                is PeriodFilter.Week -> {
-                                    val startTick = Instant
-                                        .parse(ticks.year.maxOf { it.timestamp })
-                                        .minus(7, DateTimeUnit.DAY, TimeZone.UTC)
-                                    val t = ticks.year.filter { tick ->
-                                        Instant.parse(tick.timestamp) > startTick
-                                    }
-                                    Log.e("chartV",  "$t")
-                                    t
-                                }
-                                is PeriodFilter.Month -> {
-                                    val startTick = Instant
-                                        .parse(ticks.year.maxOf { it.timestamp })
-                                        .minus(DateTimeUnit.MONTH, TimeZone.UTC)
-                                    val t = ticks.year.filter { tick ->
-                                        Instant.parse(tick.timestamp) > startTick
-                                    }
-                                    Log.e("chartV",  "$t")
-                                    t
-                                }
-                                is PeriodFilter.Year -> ticks.year
-                            }
+                            chartStatus = Status.Normal,
+                            ticks = ticksOverPeriod(ticks, period)
                         )
                     }
                     Log.e("chart", "err ${result.error?.message}")
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun ticksOverPeriod(ticks: HistoricalTicks, periodFilter: PeriodFilter): List<Tick> {
+        return when(periodFilter) {
+            is PeriodFilter.Day -> ticks.day
+            is PeriodFilter.Week -> {
+                val startTick = Instant
+                    .parse(ticks.year.maxOf { it.timestamp })
+                    .minus(7, DateTimeUnit.DAY, TimeZone.UTC)
+                ticks.year.filter { tick ->
+                    Instant.parse(tick.timestamp) > startTick
+                }
+            }
+            is PeriodFilter.Month -> {
+                val startTick = Instant
+                    .parse(ticks.year.maxOf { it.timestamp })
+                    .minus(DateTimeUnit.MONTH, TimeZone.UTC)
+                ticks.year.filter { tick ->
+                    Instant.parse(tick.timestamp) > startTick
+                }
+            }
+            is PeriodFilter.Year -> ticks.year
+        }
     }
 
     private fun toggleFavorite() {

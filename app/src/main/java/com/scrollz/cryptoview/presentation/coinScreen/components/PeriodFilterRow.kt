@@ -1,4 +1,4 @@
-package com.scrollz.cryptoview.presentation.coinsScreen.components
+package com.scrollz.cryptoview.presentation.coinScreen.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -22,35 +22,54 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.scrollz.cryptoview.presentation.coinsScreen.Filter
+import com.scrollz.cryptoview.presentation.coinScreen.PeriodFilter
 
 @Composable
 @ExperimentalMaterial3Api
-fun FilterRow(
-    filter: Filter,
-    onFilterClick: (Filter) -> Unit
+fun PeriodFilterRow(
+    periodFilter: PeriodFilter,
+    onFilterClick: (PeriodFilter) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
-    Row(
+    Surface(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .horizontalScroll(scrollState),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(32.dp),
+        color = MaterialTheme.colorScheme.surface
     ) {
-        FilterItem(
-            text = "All",
-            selected = filter == Filter.All,
-            onFilterClick = { onFilterClick(Filter.All) }
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        FilterItem(
-            text = "Favorites",
-            selected = filter == Filter.Favorites,
-            onFilterClick = { onFilterClick(Filter.Favorites) }
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp)
+                .horizontalScroll(scrollState),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            FilterItem(
+                text = "Day",
+                selected = periodFilter == PeriodFilter.Day,
+                onFilterClick = { onFilterClick(PeriodFilter.Day) }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            FilterItem(
+                text = "Week",
+                selected = periodFilter == PeriodFilter.Week,
+                onFilterClick = { onFilterClick(PeriodFilter.Week) }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            FilterItem(
+                text = "Month",
+                selected = periodFilter == PeriodFilter.Month,
+                onFilterClick = { onFilterClick(PeriodFilter.Month) }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            FilterItem(
+                text = "Year",
+                selected = periodFilter == PeriodFilter.Year,
+                onFilterClick = { onFilterClick(PeriodFilter.Year) }
+            )
+        }
     }
 }
 
@@ -62,7 +81,7 @@ fun FilterItem(
 ) {
     val surfaceColor by animateColorAsState(
         targetValue = if (selected)
-            MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondaryContainer,
+            MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer,
         animationSpec = tween(200)
     )
     val textColor by animateColorAsState(
