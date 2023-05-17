@@ -12,11 +12,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.scrollz.cryptoview.presentation.coinsScreen.CoinsEvent
 import com.scrollz.cryptoview.presentation.coinsScreen.CoinsState
@@ -55,11 +55,15 @@ fun CoinsScreen(
         ) {
             FilterRow(
                 filter = state.filter,
-                onFilterClick = { filter -> onEvent(CoinsEvent.ChooseFilter(filter)) }
+                onFilterClick = { filter ->
+                    onEvent(CoinsEvent.ChooseFilter(filter))
+                    scrollUp()
+                }
             )
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 state = lazyListState
             ) {
                 items(
@@ -77,7 +81,7 @@ fun CoinsScreen(
                     Divider(
                         modifier = Modifier.padding(start = 64.dp, end = 16.dp),
                         thickness = 0.5.dp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.outline
                     )
                 }
             }

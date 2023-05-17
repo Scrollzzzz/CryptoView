@@ -5,8 +5,11 @@ import com.scrollz.cryptoview.data.local.CryptoViewDataBase
 import com.scrollz.cryptoview.data.remote.CoinApi
 import com.scrollz.cryptoview.data.remote.CoinPaprikaApi
 import com.scrollz.cryptoview.data.remote.TimeApi
+import com.scrollz.cryptoview.domain.model.Coin
+import com.scrollz.cryptoview.domain.model.DeferredNotification
 import com.scrollz.cryptoview.domain.model.FavoriteCoin
 import com.scrollz.cryptoview.domain.model.HistoricalTicks
+import com.scrollz.cryptoview.domain.model.Notification
 import com.scrollz.cryptoview.domain.repository.CryptoViewRepository
 import com.scrollz.cryptoview.utils.Interval
 import com.scrollz.cryptoview.utils.Period
@@ -50,7 +53,7 @@ class CryptoViewRepositoryImpl @Inject constructor(
                 dao.insertCoins(coins)
             }
         },
-        shouldFetch = { false }
+        shouldFetch = { true }
     )
 
     override fun getDetailedCoin(id: String) = networkBoundResource(
@@ -98,6 +101,10 @@ class CryptoViewRepositoryImpl @Inject constructor(
         }
     )
 
+    override suspend fun getCoin(id: String): Coin {
+        return coinPaprikaApi.getCoin(id).toCoin(null)
+    }
+
     override fun getFavorites(): Flow<List<String>> {
         return dao.getFavorites()
     }
@@ -113,6 +120,42 @@ class CryptoViewRepositoryImpl @Inject constructor(
         else {
             dao.insertIntoFavorites(FavoriteCoin(id))
         }
+    }
+
+    override suspend fun getNotifications(): List<Notification> {
+        return dao.getNotifications()
+    }
+
+    override suspend fun addNotification(notification: Notification) {
+        dao.upsertNotification(notification)
+    }
+
+    override suspend fun deleteNotification(coinID: String) {
+        dao.deleteNotification(coinID)
+    }
+
+    override fun isNotificationOn(id: String): Flow<Boolean> {
+        return dao.isNotificationOn(id)
+    }
+
+    override suspend fun getDeferredNotificationsDeleting(): List<String> {
+        var deferredNotifications = emptyList<String>()
+        db.withTransaction {
+            deferredNotifications = dao.getDeferredNotifications()
+            dao.deleteAllDeferredNotifications()
+        }
+        return deferredNotifications
+    }
+
+    override suspend fun addDeferredNotificationEmptinessChecking(
+        deferredNotification: DeferredNotification
+    ): Boolean {
+        var isEmpty = true
+        db.withTransaction {
+            isEmpty = dao.noDeferredNotifications()
+            dao.upsertDeferredNotification(deferredNotification)
+        }
+        return isEmpty
     }
 
 }

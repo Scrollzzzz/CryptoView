@@ -6,6 +6,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.NotificationAdd
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,6 +22,8 @@ import androidx.compose.runtime.Composable
 fun TopBar(
     scrollBehavior: TopAppBarScrollBehavior,
     isFavorite: Boolean,
+    onNotificationEnable: () -> Unit,
+    onNotificationDisable: () -> Unit,
     onFavoriteClick: () -> Unit,
     popBackStack: () -> Unit
 ) {
@@ -45,6 +49,24 @@ fun TopBar(
             actionIconContentColor = MaterialTheme.colorScheme.onBackground
         ),
         actions = {
+            IconButton(
+                onClick = onNotificationEnable
+            ) {
+                Icon(
+                    imageVector = Icons.Default.NotificationAdd,
+                    contentDescription = "Add notification",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            IconButton(
+                onClick = onNotificationDisable
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Notifications,
+                    contentDescription = "Add notification",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
             IconButton(
                 onClick = onFavoriteClick
             ) {

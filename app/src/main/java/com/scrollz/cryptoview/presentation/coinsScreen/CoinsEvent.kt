@@ -4,4 +4,5 @@ sealed class CoinsEvent {
     data class ChooseFilter(val filter: Filter): CoinsEvent()
     data class ChangeSearchText(val text: String): CoinsEvent()
     object ToggleSearch: CoinsEvent()
+    object Refresh: CoinsEvent()
 }

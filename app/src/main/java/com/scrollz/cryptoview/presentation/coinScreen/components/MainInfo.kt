@@ -28,15 +28,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.scrollz.cryptoview.presentation.coinScreen.PeriodFilter
-import com.scrollz.cryptoview.ui.theme.Green
-import com.scrollz.cryptoview.ui.theme.Red
 import com.scrollz.cryptoview.utils.toPercentFormat
 import com.scrollz.cryptoview.utils.toPriceFormat
 
@@ -78,7 +75,7 @@ fun MainInfo(
                 type = type
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Divider(thickness = 0.5.dp, color = Color.Black)
+            Divider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outline)
             Spacer(modifier = Modifier.height(16.dp))
             PriceRow(
                 price = price,
@@ -184,7 +181,8 @@ fun PriceRow(
 ) {
 
     val percentColor by animateColorAsState(
-        targetValue = if (percentChange >= 0.0) Green else Red,
+        targetValue = if (percentChange >= 0.0) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.inversePrimary,
         animationSpec = tween(200)
     )
 

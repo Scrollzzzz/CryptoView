@@ -32,8 +32,6 @@ import com.scrollz.cryptoview.domain.model.Tick
 import com.scrollz.cryptoview.presentation.common.ErrorBox
 import com.scrollz.cryptoview.presentation.common.LoadingBox
 import com.scrollz.cryptoview.presentation.common.Status
-import com.scrollz.cryptoview.ui.theme.BrightGray
-import com.scrollz.cryptoview.ui.theme.Gold
 import com.scrollz.cryptoview.utils.toPriceFormat
 
 @Composable
@@ -73,7 +71,11 @@ fun PriceChart(
                     } else {
                         val highValue = remember(ticks) { ticks.maxOf { it.price } }
                         val lowValue = remember(ticks) { ticks.minOf { it.price } }
-
+                        val firstValue = remember(ticks) { ticks.first().price }
+                        val lastValue = remember(ticks) { ticks.last().price }
+                        val chartColor = if (lastValue >= firstValue) MaterialTheme.colorScheme.primary
+                                            else MaterialTheme.colorScheme.inversePrimary
+                        val supportColor = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.1f)
                         Box(
                             modifier = Modifier.fillMaxSize()
                         ) {
@@ -112,7 +114,7 @@ fun PriceChart(
                                 )
                                 for (y in horizontalGridY) {
                                     drawLine(
-                                        color = BrightGray.copy(alpha = 0.1f),
+                                        color = supportColor,
                                         start = Offset(0f, y),
                                         end = Offset(size.width, y),
                                         strokeWidth = 0.5.dp.toPx()
@@ -120,9 +122,9 @@ fun PriceChart(
                                 }
                                 drawPath(
                                     path = strokePath,
-                                    color = Gold,
+                                    color = chartColor,
                                     style = Stroke(
-                                        width = 2.dp.toPx(),
+                                        width = 1.dp.toPx(),
                                         cap = StrokeCap.Round
                                     )
                                 )
@@ -136,7 +138,7 @@ fun PriceChart(
                                     path = fillPath,
                                     brush = Brush.verticalGradient(
                                         colors = listOf(
-                                            Gold.copy(alpha = 0.3f),
+                                            chartColor.copy(alpha = 0.3f),
                                             Color.Transparent
                                         ),
                                         endY = size.height

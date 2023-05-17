@@ -8,6 +8,7 @@ import com.scrollz.cryptoview.utils.Resource
 import com.scrollz.cryptoview.utils.contains
 import com.scrollz.cryptoview.utils.toCoinView
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -31,18 +32,18 @@ class CoinsViewModel @Inject constructor(
     fun onEvent(event: CoinsEvent) {
         when(event) {
             is CoinsEvent.ChooseFilter -> {
-                _filterSearchState.value = _filterSearchState.value.copy(
+                _coinsState.value = _coinsState.value.copy(
                     filter = event.filter
                 )
-                _coinsState.value = _coinsState.value.copy(
+                _filterSearchState.value = _filterSearchState.value.copy(
                     filter = event.filter
                 )
             }
             is CoinsEvent.ChangeSearchText -> {
-                _filterSearchState.value = _filterSearchState.value.copy(
+                _coinsState.value = _coinsState.value.copy(
                     searchText = event.text
                 )
-                _coinsState.value = _coinsState.value.copy(
+                _filterSearchState.value = _filterSearchState.value.copy(
                     searchText = event.text
                 )
             }
@@ -50,6 +51,9 @@ class CoinsViewModel @Inject constructor(
                 _coinsState.value = _coinsState.value.copy(
                     isSearching = !_coinsState.value.isSearching
                 )
+            }
+            is CoinsEvent.Refresh -> {
+                getCoins()
             }
         }
     }
@@ -106,7 +110,7 @@ class CoinsViewModel @Inject constructor(
                     }
                 }
             }
-        }.launchIn(viewModelScope)
+        }.launchIn(viewModelScope) + Dispatchers.IO
     }
 
 }

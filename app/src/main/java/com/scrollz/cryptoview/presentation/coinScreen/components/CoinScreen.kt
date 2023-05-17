@@ -63,6 +63,8 @@ fun CoinScreen(
                             TopBar(
                                 scrollBehavior = scrollBehavior,
                                 isFavorite = state.isFavorite,
+                                onNotificationEnable = { onEvent(CoinEvent.EnableNotification) },
+                                onNotificationDisable = { onEvent(CoinEvent.DisableNotification) },
                                 onFavoriteClick = { onEvent(CoinEvent.ToggleFavorite) },
                                 popBackStack = popBackStack
                             )

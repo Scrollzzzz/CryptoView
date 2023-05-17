@@ -1,5 +1,6 @@
 package com.scrollz.cryptoview.presentation.navigation
 
+import android.content.Intent
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.scrollz.cryptoview.presentation.coinScreen.CoinViewModel
 import com.scrollz.cryptoview.presentation.coinScreen.components.CoinScreen
 import com.scrollz.cryptoview.presentation.coinsScreen.CoinsViewModel
@@ -51,6 +53,16 @@ fun Navigation() {
                     ) {
                         type = NavType.StringType
                     },
+                ),
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern = "https://rtuitlab.dev/crypto/{coinID}"
+                        action = Intent.ACTION_VIEW
+                    },
+                    navDeepLink {
+                        uriPattern = "https://com.scrollz.cryptoview/coin/{coinID}"
+                        action = Intent.ACTION_VIEW
+                    }
                 )
             ) {
                 val viewModel = hiltViewModel<CoinViewModel>()

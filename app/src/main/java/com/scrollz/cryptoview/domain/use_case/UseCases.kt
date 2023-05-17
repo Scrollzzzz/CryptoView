@@ -6,5 +6,7 @@ data class UseCases(
     val getHistoricalTicks: GetHistoricalTicks,
     val getFavorites: GetFavorites,
     val isCoinFavorite: IsCoinFavorite,
-    val toggleFavorite: ToggleFavorite
+    val toggleFavorite: ToggleFavorite,
+    val enableNotification: EnableNotification,
+    val disableNotification: DisableNotification
 )

@@ -77,16 +77,16 @@ fun PeriodFilterRow(
 fun FilterItem(
     text: String,
     selected: Boolean,
-    onFilterClick: () -> Unit,
+    onFilterClick: () -> Unit
 ) {
     val surfaceColor by animateColorAsState(
-        targetValue = if (selected)
-            MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer,
+        targetValue = if (selected) MaterialTheme.colorScheme.tertiary
+                        else MaterialTheme.colorScheme.secondaryContainer,
         animationSpec = tween(200)
     )
     val textColor by animateColorAsState(
-        targetValue = if (selected)
-            MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onBackground,
+        targetValue = if (selected) MaterialTheme.colorScheme.background
+                        else MaterialTheme.colorScheme.onBackground,
         animationSpec = tween(200)
     )
 

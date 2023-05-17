@@ -28,4 +28,5 @@ interface CoinPaprikaApi {
         @Query("start") startDateTime: String,
         @Query("interval") interval: String
     ): List<TickDTO>
+
 }

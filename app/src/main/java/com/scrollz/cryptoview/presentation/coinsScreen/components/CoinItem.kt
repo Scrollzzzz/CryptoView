@@ -28,18 +28,16 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.scrollz.cryptoview.domain.model.CoinView
-import com.scrollz.cryptoview.ui.theme.Green
-import com.scrollz.cryptoview.ui.theme.Red
 
 @Composable
 fun CoinItem(
     modifier: Modifier = Modifier,
     coin: CoinView
 ) {
-    var percentColor = Red
+    var percentColor = MaterialTheme.colorScheme.inversePrimary
     var percentIcon = Icons.Default.ArrowDropDown
     if (coin.isPercentPositive) {
-        percentColor = Green
+        percentColor = MaterialTheme.colorScheme.primary
         percentIcon = Icons.Default.ArrowDropUp
     }
 
@@ -98,7 +96,7 @@ fun CoinItem(
                 ) {
                     Surface(
                         shape = RoundedCornerShape(25),
-                        color = MaterialTheme.colorScheme.secondaryContainer
+                        color = MaterialTheme.colorScheme.secondary
                     ) {
                         Text(
                             modifier = Modifier.padding(horizontal = 2.dp),

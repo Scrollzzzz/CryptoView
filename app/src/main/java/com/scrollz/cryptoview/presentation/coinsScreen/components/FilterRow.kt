@@ -62,7 +62,7 @@ fun FilterItem(
 ) {
     val surfaceColor by animateColorAsState(
         targetValue = if (selected)
-            MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondaryContainer,
+            MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondary,
         animationSpec = tween(200)
     )
     val textColor by animateColorAsState(

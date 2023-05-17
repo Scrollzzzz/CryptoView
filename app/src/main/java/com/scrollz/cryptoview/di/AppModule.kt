@@ -10,6 +10,8 @@ import com.scrollz.cryptoview.data.remote.CoinPaprikaApi
 import com.scrollz.cryptoview.data.remote.TimeApi
 import com.scrollz.cryptoview.data.repository.CryptoViewRepositoryImpl
 import com.scrollz.cryptoview.domain.repository.CryptoViewRepository
+import com.scrollz.cryptoview.domain.use_case.DisableNotification
+import com.scrollz.cryptoview.domain.use_case.EnableNotification
 import com.scrollz.cryptoview.domain.use_case.GetCoins
 import com.scrollz.cryptoview.domain.use_case.GetDetailedCoin
 import com.scrollz.cryptoview.domain.use_case.GetFavorites
@@ -17,6 +19,7 @@ import com.scrollz.cryptoview.domain.use_case.GetHistoricalTicks
 import com.scrollz.cryptoview.domain.use_case.IsCoinFavorite
 import com.scrollz.cryptoview.domain.use_case.ToggleFavorite
 import com.scrollz.cryptoview.domain.use_case.UseCases
+import com.scrollz.cryptoview.notification.AlarmScheduler
 import com.scrollz.cryptoview.utils.Constants
 import dagger.Module
 import dagger.Provides
@@ -108,14 +111,25 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCryptoViewUseCases(repository: CryptoViewRepository): UseCases {
+    fun provideAlarmScheduler(app: Application): AlarmScheduler {
+        return AlarmScheduler(app)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCryptoViewUseCases(
+        repository: CryptoViewRepository,
+        alarmScheduler: AlarmScheduler
+    ): UseCases {
         return UseCases(
             getCoins = GetCoins(repository),
             getDetailedCoin = GetDetailedCoin(repository),
             getHistoricalTicks = GetHistoricalTicks(repository),
             getFavorites = GetFavorites(repository),
             isCoinFavorite = IsCoinFavorite(repository),
-            toggleFavorite = ToggleFavorite(repository)
+            toggleFavorite = ToggleFavorite(repository),
+            enableNotification = EnableNotification(repository, alarmScheduler),
+            disableNotification = DisableNotification(repository, alarmScheduler)
         )
     }
 

@@ -1,10 +1,12 @@
 package com.scrollz.cryptoview.presentation.coinScreen
 
 import android.util.Log
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.scrollz.cryptoview.domain.model.HistoricalTicks
+import com.scrollz.cryptoview.domain.model.Notification
 import com.scrollz.cryptoview.domain.model.Tick
 import com.scrollz.cryptoview.domain.use_case.UseCases
 import com.scrollz.cryptoview.presentation.common.Status
@@ -39,6 +41,7 @@ class CoinViewModel @Inject constructor(
         }
     }
 
+    @ExperimentalMaterial3Api
     fun onEvent(event: CoinEvent) {
         when(event) {
             is CoinEvent.ToggleFavorite -> {
@@ -49,6 +52,18 @@ class CoinViewModel @Inject constructor(
                     periodFilter = event.periodFilter
                 )
                 _periodFilterState.value = event.periodFilter
+            }
+            is CoinEvent.EnableNotification -> {
+                viewModelScope.launch {
+                    useCases.enableNotification(
+                        Notification(_coinState.value.coin?.id ?: "d", 6, 0)
+                    )
+                }
+            }
+            is CoinEvent.DisableNotification -> {
+                viewModelScope.launch {
+                    useCases.disableNotification(_coinState.value.coin?.id ?: "d")
+                }
             }
         }
     }

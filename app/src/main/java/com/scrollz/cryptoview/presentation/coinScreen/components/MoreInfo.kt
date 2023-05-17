@@ -21,10 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.scrollz.cryptoview.ui.theme.Green
-import com.scrollz.cryptoview.ui.theme.Red
 import com.scrollz.cryptoview.utils.toPercentFormat
 import com.scrollz.cryptoview.utils.toPriceFormat
 import com.scrollz.cryptoview.utils.toSupplyFormat
@@ -64,7 +61,7 @@ fun MoreInfo(
             ValueChangeItem(value = marketCap, percentChange = marketCapChange24h)
 
             Spacer(modifier = Modifier.height(16.dp))
-            Divider(thickness = 0.5.dp, color = Color.Black)
+            Divider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outline)
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
@@ -76,7 +73,7 @@ fun MoreInfo(
             ValueChangeItem(value = volume24h, percentChange = volumeChange24h)
 
             Spacer(modifier = Modifier.height(16.dp))
-            Divider(thickness = 0.5.dp, color = Color.Black)
+            Divider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outline)
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
@@ -88,7 +85,7 @@ fun MoreInfo(
             ValueChangeItem(value = priceATH, percentChange = percentFromATHPrice, true)
 
             Spacer(modifier = Modifier.height(16.dp))
-            Divider(thickness = 0.5.dp, color = Color.Black)
+            Divider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outline)
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
@@ -113,8 +110,8 @@ fun ValueChangeItem(
     priceFormat: Boolean = false
 ) {
     val percentColor = when {
-        percentChange > 0.0 -> Green
-        percentChange < 0.0 -> Red
+        percentChange > 0.0 -> MaterialTheme.colorScheme.primary
+        percentChange < 0.0 -> MaterialTheme.colorScheme.inversePrimary
         else -> MaterialTheme.colorScheme.onSecondary
     }
     val percentIcon = when {

@@ -8,36 +8,45 @@ import androidx.compose.runtime.Composable
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColorScheme(
-    background = DarkGray,
-    onBackground = White,
+    background = DarkGrayD,
+    onBackground = WhiteD,
 
-    surface = Gray,
-    onSurface = White,
+    surface = GrayD,
+    onSurface = WhiteD,
 
-    secondaryContainer = LightGray,
-    onSecondaryContainer = BrightGray,
-    onSecondary = BrightGray,
+    primary = Green,
+    inversePrimary = Red,
+    onPrimary = DarkGrayD,
 
-    primary = Gold,
-    onPrimary = DarkGray,
+    secondary = LightGrayD,
+    secondaryContainer = LightGrayD,
+    onSecondaryContainer = BrightGrayD,
+    onSecondary = BrightGrayD,
 
-    scrim = Scream
+    tertiary = WhiteD,
+
+    outline = BlackD
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = White,
-    secondary = White,
-    tertiary = White
+    background = LightWhiteL,
+    onBackground = DarkGrayL,
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    surface = WhiteL,
+    onSurface = DarkGrayL,
+
+    primary = Green,
+    inversePrimary = Red,
+    onPrimary = LightWhiteL,
+
+    secondary = HeavyWhiteL,
+    secondaryContainer = MiddleWhiteL,
+    onSecondaryContainer = GrayL,
+    onSecondary = GrayL,
+
+    tertiary = DarkGrayL,
+
+    outline = LightGrayL
 )
 
 @Composable
@@ -46,8 +55,8 @@ fun CryptoViewTheme(
     content: @Composable () -> Unit
 ) {
     val systemUiController = rememberSystemUiController()
-    systemUiController.setStatusBarColor(if (darkTheme) DarkGray else White)
-    systemUiController.setNavigationBarColor(if (darkTheme) DarkGray else White)
+    systemUiController.setStatusBarColor(if (darkTheme) DarkGrayD else LightWhiteL)
+    systemUiController.setNavigationBarColor(if (darkTheme) DarkGrayD else LightWhiteL)
 
     val colorScheme = when {
         darkTheme -> DarkColorScheme
