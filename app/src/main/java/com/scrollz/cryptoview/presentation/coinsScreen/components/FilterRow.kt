@@ -21,7 +21,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.scrollz.cryptoview.R
 import com.scrollz.cryptoview.presentation.coinsScreen.Filter
 
 @Composable
@@ -41,13 +43,13 @@ fun FilterRow(
         horizontalArrangement = Arrangement.Start
     ) {
         FilterItem(
-            text = "All",
+            text = stringResource(R.string.filter_all),
             selected = filter == Filter.All,
             onFilterClick = { onFilterClick(Filter.All) }
         )
         Spacer(modifier = Modifier.width(8.dp))
         FilterItem(
-            text = "Favorites",
+            text = stringResource(R.string.filter_favorites),
             selected = filter == Filter.Favorites,
             onFilterClick = { onFilterClick(Filter.Favorites) }
         )

@@ -74,8 +74,8 @@ class CryptoViewRepositoryImpl @Inject constructor(
         query = {
             dao.getHistoricalTicks(id).map { list ->
                 HistoricalTicks(
-                    day = list.filter { it.period == Period.DAY.value },
-                    year = list.filter { it.period == Period.YEAR.value }
+                    day = list.filter { it.period == Period.DAY },
+                    year = list.filter { it.period == Period.YEAR }
                 )
             }
         },
@@ -83,14 +83,14 @@ class CryptoViewRepositoryImpl @Inject constructor(
             val currentTime = timeApi.getCurrentTime().dateTime
             val dayTicks = coinPaprikaApi.getHistoricalTicks(
                 id = id,
-                startDateTime = timeForDayTicks(currentTime),
-                interval = Interval.ONE_HOUR.value
-            ).map { it.toTick(id, Period.DAY.value) }
+                startDateTime = currentTime.timeForDayTicks(),
+                interval = Interval.ONE_HOUR
+            ).map { it.toTick(id, Period.DAY) }
             val yearTicks = coinPaprikaApi.getHistoricalTicks(
                 id = id,
-                startDateTime = timeForYearTicks(currentTime),
-                interval = Interval.ONE_DAY.value
-            ).map { it.toTick(id, Period.YEAR.value) }
+                startDateTime = currentTime.timeForYearTicks(),
+                interval = Interval.ONE_DAY
+            ).map { it.toTick(id, Period.YEAR) }
             dayTicks.plus(yearTicks)
         },
         saveFetchResult = { ticks ->
@@ -122,8 +122,8 @@ class CryptoViewRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getNotifications(): List<Notification> {
-        return dao.getNotifications()
+    override fun getNotification(coinID: String): Flow<Notification?> {
+        return dao.getNotification(coinID)
     }
 
     override suspend fun addNotification(notification: Notification) {
@@ -132,10 +132,7 @@ class CryptoViewRepositoryImpl @Inject constructor(
 
     override suspend fun deleteNotification(coinID: String) {
         dao.deleteNotification(coinID)
-    }
-
-    override fun isNotificationOn(id: String): Flow<Boolean> {
-        return dao.isNotificationOn(id)
+        dao.deleteDeferredNotification(coinID)
     }
 
     override suspend fun getDeferredNotificationsDeleting(): List<String> {

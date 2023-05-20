@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
-import android.util.Log
 import com.scrollz.cryptoview.domain.model.DeferredNotification
 import com.scrollz.cryptoview.domain.repository.CryptoViewRepository
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,8 +25,7 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context != null) {
             intent?.extras?.getString("coinID")?.let { id ->
-                val handler = CoroutineExceptionHandler { _, throwable ->
-                    Log.e("Request error", throwable.message ?: "err")
+                val handler = CoroutineExceptionHandler { _, _ ->
                     CoroutineScope(Dispatchers.IO).launch {
                         val isEmpty = repository.addDeferredNotificationEmptinessChecking(
                             DeferredNotification(id)

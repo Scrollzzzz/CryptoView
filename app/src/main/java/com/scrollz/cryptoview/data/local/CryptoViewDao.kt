@@ -61,11 +61,8 @@ interface CryptoViewDao {
 
 
     // Notifications
-    @Query("SELECT * FROM notification")
-    suspend fun getNotifications(): List<Notification>
-
-    @Query("SELECT CASE WHEN EXISTS(SELECT 1 FROM notification WHERE coinID = :id) THEN 1 ELSE 0 END AS notification_on")
-    fun isNotificationOn(id: String): Flow<Boolean>
+    @Query("SELECT * FROM notification WHERE coinID = :coinID")
+    fun getNotification(coinID: String): Flow<Notification?>
 
     @Upsert(entity = Notification::class)
     suspend fun upsertNotification(notification: Notification)
@@ -83,6 +80,9 @@ interface CryptoViewDao {
 
     @Upsert(entity = DeferredNotification::class)
     suspend fun upsertDeferredNotification(deferredNotification: DeferredNotification)
+
+    @Query("DELETE FROM deferred_notification WHERE coinID = :coinID")
+    suspend fun deleteDeferredNotification(coinID: String)
 
     @Query("DELETE FROM deferred_notification")
     suspend fun deleteAllDeferredNotifications()

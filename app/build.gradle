@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.scrollz.cryptoview"
-        minSdk 21
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -103,6 +103,13 @@ dependencies {
 
     // Date Time
     implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
+
+    implementation 'com.google.accompanist:accompanist-swiperefresh:0.30.1'
+
+    // Splash Screen
+    implementation "androidx.core:core-splashscreen:1.0.1"
+
+    implementation 'com.afollestad.material-dialogs:datetime:3.3.0'
 }
 
 kapt {

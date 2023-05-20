@@ -63,108 +63,99 @@ fun PriceChart(
                     )
                 }
                 is Status.Normal -> {
-                    if (ticks.size < 6) {
-                        ErrorBox(
-                            backgroundColor = MaterialTheme.colorScheme.background,
-                            text = "Error"
-                        )
-                    } else {
-                        val highValue = remember(ticks) { ticks.maxOf { it.price } }
-                        val lowValue = remember(ticks) { ticks.minOf { it.price } }
-                        val firstValue = remember(ticks) { ticks.first().price }
-                        val lastValue = remember(ticks) { ticks.last().price }
-                        val chartColor = if (lastValue >= firstValue) MaterialTheme.colorScheme.primary
-                                            else MaterialTheme.colorScheme.inversePrimary
-                        val supportColor = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.1f)
-                        Box(
-                            modifier = Modifier.fillMaxSize()
+                    val highValue = remember(ticks) { ticks.maxOf { it.price } }
+                    val lowValue = remember(ticks) { ticks.minOf { it.price } }
+                    val firstValue = remember(ticks) { ticks.first().price }
+                    val lastValue = remember(ticks) { ticks.last().price }
+                    val chartColor = if (lastValue >= firstValue) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.inversePrimary
+                    val supportColor = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.1f)
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Canvas(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 32.dp)
                         ) {
-                            Canvas(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(top = 32.dp)
-                            ) {
-                                val spacePerHour = size.width / (ticks.size - 1)
-                                val chartHeight = size.height - 32.dp.toPx()
+                            val spacePerHour = size.width / (ticks.size - 1)
+                            val chartHeight = size.height - 32.dp.toPx()
 
-                                val strokePath = Path().apply {
+                            val strokePath = Path().apply {
+                                for (i in ticks.indices) {
+                                    val nextI = ticks.getOrNull(i + 1)?.price ?: ticks.last().price
 
-                                    for (i in ticks.indices) {
-                                        val nextI = ticks.getOrNull(i + 1)?.price ?: ticks.last().price
+                                    val leftRatio = (ticks[i].price - lowValue) / (highValue - lowValue)
+                                    val rightRatio = (nextI - lowValue) / (highValue - lowValue)
 
-                                        val leftRatio = (ticks[i].price - lowValue) / (highValue - lowValue)
-                                        val rightRatio = (nextI - lowValue) / (highValue - lowValue)
+                                    val x1 = i * spacePerHour
+                                    val y1 = chartHeight - (leftRatio * chartHeight).toFloat()
+                                    val x2 = (i + 1) * spacePerHour
+                                    val y2 = chartHeight - (rightRatio * chartHeight).toFloat()
 
-                                        val x1 = i * spacePerHour
-                                        val y1 = chartHeight - (leftRatio * chartHeight).toFloat()
-                                        val x2 = (i + 1) * spacePerHour
-                                        val y2 = chartHeight - (rightRatio * chartHeight).toFloat()
-
-                                        if (i == 0) {
-                                            moveTo(x1, y1)
-                                        }
-                                        quadraticBezierTo(
-                                            x1, y1, (x1 + x2) / 2f, (y1 + y2) / 2f
-                                        )
+                                    if (i == 0) {
+                                        moveTo(x1, y1)
                                     }
-                                }
-                                val horizontalGridY = listOf(
-                                    0f, chartHeight * 1 / 4, chartHeight / 2,
-                                    chartHeight * 3 / 4, chartHeight
-                                )
-                                for (y in horizontalGridY) {
-                                    drawLine(
-                                        color = supportColor,
-                                        start = Offset(0f, y),
-                                        end = Offset(size.width, y),
-                                        strokeWidth = 0.5.dp.toPx()
+                                    quadraticBezierTo(
+                                        x1, y1, (x1 + x2) / 2f, (y1 + y2) / 2f
                                     )
                                 }
-                                drawPath(
-                                    path = strokePath,
-                                    color = chartColor,
-                                    style = Stroke(
-                                        width = 1.dp.toPx(),
-                                        cap = StrokeCap.Round
-                                    )
-                                )
-                                val fillPath = strokePath
-                                    .apply {
-                                        lineTo(size.width, size.height)
-                                        lineTo(0f, size.height)
-                                        close()
-                                    }
-                                drawPath(
-                                    path = fillPath,
-                                    brush = Brush.verticalGradient(
-                                        colors = listOf(
-                                            chartColor.copy(alpha = 0.3f),
-                                            Color.Transparent
-                                        ),
-                                        endY = size.height
-                                    )
+                            }
+                            val horizontalGridY = listOf(
+                                0f, chartHeight * 1 / 4, chartHeight / 2,
+                                chartHeight * 3 / 4, chartHeight
+                            )
+                            for (y in horizontalGridY) {
+                                drawLine(
+                                    color = supportColor,
+                                    start = Offset(0f, y),
+                                    end = Offset(size.width, y),
+                                    strokeWidth = 0.5.dp.toPx()
                                 )
                             }
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(horizontal = 4.dp),
-                                horizontalAlignment = Alignment.Start,
-                                verticalArrangement = Arrangement.SpaceBetween
+                            drawPath(
+                                path = strokePath,
+                                color = chartColor,
+                                style = Stroke(
+                                    width = 1.dp.toPx(),
+                                    cap = StrokeCap.Round
+                                )
+                            )
+                            val fillPath = strokePath.apply {
+                                lineTo(size.width, size.height)
+                                lineTo(0f, size.height)
+                                close()
+                            }
+                            drawPath(
+                                path = fillPath,
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        chartColor.copy(alpha = 0.3f),
+                                        Color.Transparent
+                                    ),
+                                    endY = size.height
+                                )
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 4.dp),
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(
+                                modifier = Modifier.height(32.dp),
+                                verticalAlignment = Alignment.Bottom
                             ) {
-                                Row(
-                                    modifier = Modifier.height(32.dp),
-                                    verticalAlignment = Alignment.Bottom
-                                ) {
-                                    LabelItem(text = highValue.toPriceFormat())
-                                }
-                                LabelItem(text = ((highValue + lowValue) / 2).toPriceFormat())
-                                Row(
-                                    modifier = Modifier.height(32.dp),
-                                    verticalAlignment = Alignment.Top
-                                ) {
-                                    LabelItem(text = lowValue.toPriceFormat())
-                                }
+                                LabelItem(text = highValue.toPriceFormat())
+                            }
+                            LabelItem(text = ((highValue + lowValue) / 2).toPriceFormat())
+                            Row(
+                                modifier = Modifier.height(32.dp),
+                                verticalAlignment = Alignment.Top
+                            ) {
+                                LabelItem(text = lowValue.toPriceFormat())
                             }
                         }
                     }

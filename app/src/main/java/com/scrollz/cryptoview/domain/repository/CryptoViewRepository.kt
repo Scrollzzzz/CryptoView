@@ -24,13 +24,11 @@ interface CryptoViewRepository {
 
     suspend fun toggleFavorite(id: String)
 
-    suspend fun getNotifications(): List<Notification>
+    fun getNotification(coinID: String): Flow<Notification?>
 
     suspend fun addNotification(notification: Notification)
 
     suspend fun deleteNotification(coinID: String)
-
-    fun isNotificationOn(id: String): Flow<Boolean>
 
     suspend fun getDeferredNotificationsDeleting(): List<String>
 

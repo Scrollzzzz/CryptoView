@@ -9,6 +9,7 @@ data class CoinView(
     val rank: Int,
     val price: String,
     val percentChange24h: String,
+    val lastUpdated: String,
     val iconUrl: String? = null,
     val isPercentPositive: Boolean
 )

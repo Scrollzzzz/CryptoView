@@ -8,6 +8,8 @@ import android.net.Uri
 import androidx.core.app.NotificationCompat
 import com.scrollz.cryptoview.R
 import com.scrollz.cryptoview.domain.model.Coin
+import com.scrollz.cryptoview.utils.URL
+import com.scrollz.cryptoview.utils.toPercentFormat
 import com.scrollz.cryptoview.utils.toPriceFormat
 
 class NotificationService(
@@ -19,7 +21,7 @@ class NotificationService(
     fun showNotification(coin: Coin) {
         val launchIntent = Intent(
             Intent.ACTION_VIEW,
-            Uri.parse("https://com.scrollz.cryptoview/coin/${coin.id}")
+            Uri.parse("${URL.APP_BASE_URL}/coin/${coin.id}")
         )
         val pendingIntent = PendingIntent.getActivity(
             context,
@@ -28,10 +30,14 @@ class NotificationService(
             PendingIntent.FLAG_IMMUTABLE
         )
 
+        val sign = if(coin.percentChange24h < 0) '-' else '+'
+        val text = "${coin.name}:  ${coin.price.toPriceFormat()}  " + sign +
+                    coin.percentChange24h.toPercentFormat()
+
         val notification = NotificationCompat.Builder(context, EXCHANGE_RATE_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.icon_foreground)
             .setContentTitle(coin.symbol)
-            .setContentText("${coin.name} price is: ${coin.price.toPriceFormat()}")
+            .setContentText(text)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .build()

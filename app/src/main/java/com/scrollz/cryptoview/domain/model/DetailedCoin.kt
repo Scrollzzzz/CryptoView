@@ -28,5 +28,5 @@ data class DetailedCoin(
     val marketCapChange24h: Double,
     val priceATH: Double,
     val percentFromATHPrice: Double,
-    val last_updated: String
+    val lastUpdated: String
 )

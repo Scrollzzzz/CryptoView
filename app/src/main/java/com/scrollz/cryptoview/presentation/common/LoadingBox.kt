@@ -23,7 +23,7 @@ fun LoadingBox(
     ) {
         CircularProgressIndicator(
             color = MaterialTheme.colorScheme.tertiary,
-            strokeWidth = 2.dp
+            strokeWidth = 1.dp
         )
     }
 }

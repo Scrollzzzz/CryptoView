@@ -21,7 +21,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.scrollz.cryptoview.R
 import com.scrollz.cryptoview.presentation.coinScreen.PeriodFilter
 
 @Composable
@@ -47,25 +49,25 @@ fun PeriodFilterRow(
             horizontalArrangement = Arrangement.Start
         ) {
             FilterItem(
-                text = "Day",
+                text = stringResource(R.string.chart_filter_day),
                 selected = periodFilter == PeriodFilter.Day,
                 onFilterClick = { onFilterClick(PeriodFilter.Day) }
             )
             Spacer(modifier = Modifier.width(8.dp))
             FilterItem(
-                text = "Week",
+                text = stringResource(R.string.chart_filter_week),
                 selected = periodFilter == PeriodFilter.Week,
                 onFilterClick = { onFilterClick(PeriodFilter.Week) }
             )
             Spacer(modifier = Modifier.width(8.dp))
             FilterItem(
-                text = "Month",
+                text = stringResource(R.string.chart_filter_month),
                 selected = periodFilter == PeriodFilter.Month,
                 onFilterClick = { onFilterClick(PeriodFilter.Month) }
             )
             Spacer(modifier = Modifier.width(8.dp))
             FilterItem(
-                text = "Year",
+                text = stringResource(R.string.chart_filter_year),
                 selected = periodFilter == PeriodFilter.Year,
                 onFilterClick = { onFilterClick(PeriodFilter.Year) }
             )

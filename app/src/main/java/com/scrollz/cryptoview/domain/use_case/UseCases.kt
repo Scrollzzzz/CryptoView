@@ -8,5 +8,6 @@ data class UseCases(
     val isCoinFavorite: IsCoinFavorite,
     val toggleFavorite: ToggleFavorite,
     val enableNotification: EnableNotification,
-    val disableNotification: DisableNotification
+    val disableNotification: DisableNotification,
+    val getNotification: GetNotification
 )

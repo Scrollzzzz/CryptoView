@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_permission_request">Приложению необходимо разрешение, чтобы отправлять уведомления. Разрешение можно предоставить в настройках.</string>
+    <string name="filter_all">Все</string>
+    <string name="filter_favorites">Избранные</string>
+    <string name="chart_filter_day">День</string>
+    <string name="chart_filter_week">Неделя</string>
+    <string name="chart_filter_month">Месяц</string>
+    <string name="chart_filter_year">Год</string>
+    <string name="more_info_market_cap">Рыночная капитализация / 24ч</string>
+    <string name="more_info_volume">Объем 24ч / 24ч</string>
+    <string name="more_info_ath">Пиковая цена</string>
+    <string name="more_info_supply">Предложение</string>
+    <string name="more_info_supply_circulating">Оборотное</string>
+    <string name="more_info_supply_total">Общее</string>
+    <string name="more_info_supply_max">Максимальное</string>
+    <string name="search">Поиск</string>
+    <string name="last_update">Последнее обновление</string>
+    <string name="search_close">Закрыть поиск</string>
+    <string name="search_clear">Очистить</string>
+    <string name="notification_dialog_header">Подписаться на уведомление о курсе валюты</string>
+    <string name="notification_dialog_enable">Включить</string>
+    <string name="notification_dialog_disable">Удалить</string>
+    <string name="notification_dialog_update">Обновить</string>
+    <string name="button_come_back">Вернуться назад</string>
+    <string name="button_add_to_favorites">Добавить в избранное</string>
+    <string name="button_remove_from_favorites">Убрать из избранного</string>
+    <string name="button_add_notification">Добавить уведомление</string>
+    <string name="button_change_notification_settings">Изменть настройки уведомления</string>
+    <string name="notification_channel_exchange_rates">Курсы обмена</string>
+</resources>

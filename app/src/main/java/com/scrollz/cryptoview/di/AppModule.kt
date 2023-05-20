@@ -16,11 +16,12 @@ import com.scrollz.cryptoview.domain.use_case.GetCoins
 import com.scrollz.cryptoview.domain.use_case.GetDetailedCoin
 import com.scrollz.cryptoview.domain.use_case.GetFavorites
 import com.scrollz.cryptoview.domain.use_case.GetHistoricalTicks
+import com.scrollz.cryptoview.domain.use_case.GetNotification
 import com.scrollz.cryptoview.domain.use_case.IsCoinFavorite
 import com.scrollz.cryptoview.domain.use_case.ToggleFavorite
 import com.scrollz.cryptoview.domain.use_case.UseCases
 import com.scrollz.cryptoview.notification.AlarmScheduler
-import com.scrollz.cryptoview.utils.Constants
+import com.scrollz.cryptoview.utils.URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -69,7 +70,7 @@ object AppModule {
     @Singleton
     fun provideCoinPaprikaApi(okHttpClient: OkHttpClient, gson: Gson): CoinPaprikaApi {
         return Retrofit.Builder()
-            .baseUrl(Constants.COINPAPRIKA_API_BASE_URL)
+            .baseUrl(URL.COINPAPRIKA_API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .build()
@@ -80,7 +81,7 @@ object AppModule {
     @Singleton
     fun provideCoinApi(okHttpClient: OkHttpClient, gson: Gson): CoinApi {
         return Retrofit.Builder()
-            .baseUrl(Constants.COIN_API_BASE_URL)
+            .baseUrl(URL.COIN_API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .build()
@@ -91,7 +92,7 @@ object AppModule {
     @Singleton
     fun provideTimeApi(okHttpClient: OkHttpClient, gson: Gson): TimeApi {
         return Retrofit.Builder()
-            .baseUrl(Constants.TIME_API_BASE_URL)
+            .baseUrl(URL.TIME_API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .build()
@@ -129,7 +130,8 @@ object AppModule {
             isCoinFavorite = IsCoinFavorite(repository),
             toggleFavorite = ToggleFavorite(repository),
             enableNotification = EnableNotification(repository, alarmScheduler),
-            disableNotification = DisableNotification(repository, alarmScheduler)
+            disableNotification = DisableNotification(repository, alarmScheduler),
+            getNotification = GetNotification(repository)
         )
     }
 

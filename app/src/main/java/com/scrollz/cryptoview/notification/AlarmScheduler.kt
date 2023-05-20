@@ -21,20 +21,25 @@ class AlarmScheduler(
         timeToAlarm.set(Calendar.SECOND, 0)
         timeToAlarm.set(Calendar.MILLISECOND, 0)
 
+        val now = Calendar.getInstance(Locale.getDefault())
+
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("coinID", notification.coinID)
         }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            notification.coinID.hashCode(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        if (now > timeToAlarm) timeToAlarm.roll(Calendar.HOUR, 24)
 
         alarmManager.setRepeating(
-            AlarmManager.RTC,
+            AlarmManager.RTC_WAKEUP,
             timeToAlarm.timeInMillis,
-            (1000 * 60 * 10).toLong(),
-            PendingIntent.getBroadcast(
-                context,
-                notification.coinID.hashCode(),
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
         )
     }
 

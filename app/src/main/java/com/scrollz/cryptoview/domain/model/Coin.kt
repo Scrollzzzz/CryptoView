@@ -12,5 +12,6 @@ data class Coin(
     val rank: Int,
     val price: Double,
     val percentChange24h: Double,
+    val lastUpdated: String,
     val iconUrl: String? = null
 )

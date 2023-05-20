@@ -21,7 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.scrollz.cryptoview.R
 import com.scrollz.cryptoview.utils.toPercentFormat
 import com.scrollz.cryptoview.utils.toPriceFormat
 import com.scrollz.cryptoview.utils.toSupplyFormat
@@ -53,7 +55,7 @@ fun MoreInfo(
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = "Market cap",
+                text = stringResource(R.string.more_info_market_cap),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -65,7 +67,7 @@ fun MoreInfo(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Volume",
+                text = stringResource(R.string.more_info_volume),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -77,7 +79,7 @@ fun MoreInfo(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "ATH",
+                text = stringResource(R.string.more_info_ath),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -89,16 +91,25 @@ fun MoreInfo(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Supply",
+                text = stringResource(R.string.more_info_supply),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(8.dp))
-            SupplyItem(name = "Circulating", value = circulatingSupply)
+            SupplyItem(
+                name = stringResource(R.string.more_info_supply_circulating),
+                value = circulatingSupply
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            SupplyItem(name = "Total", value = totalSupply)
+            SupplyItem(
+                name = stringResource(R.string.more_info_supply_total),
+                value = totalSupply
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            SupplyItem(name = "Max", value = maxSupply)
+            SupplyItem(
+                name = stringResource(R.string.more_info_supply_max),
+                value = maxSupply
+            )
         }
     }
 }

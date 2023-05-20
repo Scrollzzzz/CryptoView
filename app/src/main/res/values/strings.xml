@@ -1,3 +1,31 @@
 <resources>
-    <string name="app_name">CryptoView</string>
+    <string name="app_name" translatable="false">CryptoView</string>
+    <string name="notification_permission_request">The app needs permission to send notifications. Permission can be granted in the settings.</string>
+    <string name="filter_all">All</string>
+    <string name="filter_favorites">Favorites</string>
+    <string name="chart_filter_day">Day</string>
+    <string name="chart_filter_week">Week</string>
+    <string name="chart_filter_month">Month</string>
+    <string name="chart_filter_year">Year</string>
+    <string name="more_info_market_cap">Market cap / 24h</string>
+    <string name="more_info_volume">Volume 24h / 24h</string>
+    <string name="more_info_ath">ATH</string>
+    <string name="more_info_supply">Supply</string>
+    <string name="more_info_supply_circulating">Circulating</string>
+    <string name="more_info_supply_total">Total</string>
+    <string name="more_info_supply_max">Max</string>
+    <string name="search">Search</string>
+    <string name="last_update">Last update</string>
+    <string name="search_close">Close search</string>
+    <string name="search_clear">Clear</string>
+    <string name="notification_dialog_header">Subscribe to exchange rate notification</string>
+    <string name="notification_dialog_enable">Enable</string>
+    <string name="notification_dialog_disable">Delete</string>
+    <string name="notification_dialog_update">Update</string>
+    <string name="button_come_back">Come back</string>
+    <string name="button_add_to_favorites">Add to favorites</string>
+    <string name="button_remove_from_favorites">Remove from favorites</string>
+    <string name="button_add_notification">Add notification</string>
+    <string name="button_change_notification_settings">Change notification settings</string>
+    <string name="notification_channel_exchange_rates">Exchange rates</string>
 </resources>

@@ -20,7 +20,7 @@ fun Double.toPriceFormat(): String {
         for (i in str.length - 6 downTo 2 step 3) {
             stringBuilder.insert(i, ',')
         }
-        return stringBuilder.toString()
+        stringBuilder.toString()
     }
     else {
         val fraction = this.toString().drop(2)
@@ -66,6 +66,7 @@ fun CoinDTO.toCoin(iconUrl: String?): Coin {
         rank = rank,
         price = quotes.usd.price,
         percentChange24h = quotes.usd.percentChange24h,
+        lastUpdated = lastUpdated,
         iconUrl = iconUrl
     )
 }
@@ -78,6 +79,7 @@ fun Coin.toCoinView(): CoinView {
         rank = rank,
         price = price.toPriceFormat(),
         percentChange24h = percentChange24h.toPercentFormat(),
+        lastUpdated = lastUpdated,
         iconUrl = iconUrl,
         isPercentPositive = percentChange24h >= 0.0
     )
@@ -90,7 +92,7 @@ fun createDetailedCoin(coin: CoinDTO, coinInfo: CoinInfoDTO): DetailedCoin {
         symbol = coin.symbol,
         rank = coin.rank,
         iconUrl = coinInfo.logo,
-        type = coinInfo.type,
+        type = coinInfo.type.replaceFirstChar { it.uppercase() },
         price = coin.quotes.usd.price,
         percentChange1h = coin.quotes.usd.percentChange1h,
         percentChange12h = coin.quotes.usd.percentChange12h,
@@ -107,7 +109,7 @@ fun createDetailedCoin(coin: CoinDTO, coinInfo: CoinInfoDTO): DetailedCoin {
         marketCapChange24h = coin.quotes.usd.marketCapChange24h,
         priceATH = coin.quotes.usd.athPrice,
         percentFromATHPrice = coin.quotes.usd.percentFromPriceAth,
-        last_updated = coin.lastUpdated
+        lastUpdated = coin.lastUpdated.toLocalDateTime()
     )
 }
 

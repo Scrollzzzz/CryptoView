@@ -14,21 +14,20 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.scrollz.cryptoview.R
 
 @Composable
 @ExperimentalMaterial3Api
 fun TopBar(
-    scrollBehavior: TopAppBarScrollBehavior,
     isFavorite: Boolean,
-    onNotificationEnable: () -> Unit,
-    onNotificationDisable: () -> Unit,
+    isNotificationOn: Boolean,
     onFavoriteClick: () -> Unit,
+    showNotificationDialog: () -> Unit,
     popBackStack: () -> Unit
 ) {
     TopAppBar(
-        scrollBehavior = scrollBehavior,
         title = {  },
         navigationIcon = {
             IconButton(
@@ -36,7 +35,7 @@ fun TopBar(
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Come back",
+                    contentDescription = stringResource(R.string.button_come_back),
                     tint = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -50,22 +49,27 @@ fun TopBar(
         ),
         actions = {
             IconButton(
-                onClick = onNotificationEnable
+                onClick = showNotificationDialog
             ) {
-                Icon(
-                    imageVector = Icons.Default.NotificationAdd,
-                    contentDescription = "Add notification",
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            IconButton(
-                onClick = onNotificationDisable
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Notifications,
-                    contentDescription = "Add notification",
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
+                Crossfade(
+                    targetState = isNotificationOn,
+                    animationSpec = tween(200)
+                ) { isNotificationOn ->
+                    if (isNotificationOn) {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = stringResource(R.string.button_change_notification_settings),
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                    else {
+                        Icon(
+                            imageVector = Icons.Default.NotificationAdd,
+                            contentDescription = stringResource(R.string.button_add_notification),
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                }
             }
             IconButton(
                 onClick = onFavoriteClick
@@ -77,14 +81,14 @@ fun TopBar(
                     if (isFavorite) {
                         Icon(
                             imageVector = Icons.Default.Favorite,
-                            contentDescription = "Remove from favorites",
+                            contentDescription = stringResource(R.string.button_remove_from_favorites),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                     else {
                         Icon(
                             imageVector = Icons.Default.FavoriteBorder,
-                            contentDescription = "Add to favorites",
+                            contentDescription = stringResource(R.string.button_add_to_favorites),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }

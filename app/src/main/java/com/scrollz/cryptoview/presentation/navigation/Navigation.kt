@@ -18,6 +18,7 @@ import com.scrollz.cryptoview.presentation.coinScreen.CoinViewModel
 import com.scrollz.cryptoview.presentation.coinScreen.components.CoinScreen
 import com.scrollz.cryptoview.presentation.coinsScreen.CoinsViewModel
 import com.scrollz.cryptoview.presentation.coinsScreen.components.CoinsScreen
+import com.scrollz.cryptoview.utils.URL
 
 @Composable
 @ExperimentalMaterial3Api
@@ -56,11 +57,11 @@ fun Navigation() {
                 ),
                 deepLinks = listOf(
                     navDeepLink {
-                        uriPattern = "https://rtuitlab.dev/crypto/{coinID}"
+                        uriPattern = "${URL.RTUITLAB_BASE_URL}/crypto/{coinID}"
                         action = Intent.ACTION_VIEW
                     },
                     navDeepLink {
-                        uriPattern = "https://com.scrollz.cryptoview/coin/{coinID}"
+                        uriPattern = "${URL.APP_BASE_URL}/coin/{coinID}"
                         action = Intent.ACTION_VIEW
                     }
                 )

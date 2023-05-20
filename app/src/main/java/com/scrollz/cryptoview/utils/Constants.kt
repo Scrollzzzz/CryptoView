@@ -1,17 +1,19 @@
 package com.scrollz.cryptoview.utils
 
-object Constants {
+object URL {
     const val COIN_API_BASE_URL = "https://rest.coinapi.io/v1/"
     const val COINPAPRIKA_API_BASE_URL = "https://api.coinpaprika.com/v1/"
     const val TIME_API_BASE_URL = "https://www.timeapi.io/api/"
+    const val APP_BASE_URL = "https://com.scrollz.cryptoview"
+    const val RTUITLAB_BASE_URL = "https://rtuitlab.dev"
 }
 
-enum class Interval(val value: String) {
-    ONE_HOUR("1h"),
-    ONE_DAY("1d")
+object Interval {
+    const val ONE_HOUR = "1h"
+    const val ONE_DAY = "1d"
 }
 
-enum class Period(val value: String) {
-    DAY("day"),
-    YEAR("year")
+object Period {
+    const val DAY = "day"
+    const val YEAR = "year"
 }

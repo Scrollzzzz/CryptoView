@@ -8,5 +8,6 @@ data class CoinsState(
     val coinsList: List<CoinView> = emptyList(),
     val filter: Filter = Filter.All,
     val isSearching: Boolean = false,
-    val searchText: String = ""
+    val searchText: String = "",
+    val lastUpdated: String = ""
 )

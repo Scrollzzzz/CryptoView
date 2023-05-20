@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.CryptoView" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/background_d</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icon_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.CryptoViewU31</item>
+    </style>
+</resources>

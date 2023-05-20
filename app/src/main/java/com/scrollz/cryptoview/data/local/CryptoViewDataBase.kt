@@ -14,7 +14,7 @@ import com.scrollz.cryptoview.domain.model.Tick
         Coin::class, DetailedCoin::class, FavoriteCoin::class,
         Tick::class, Notification::class, DeferredNotification::class
     ],
-    version = 7
+    version = 9
 )
 
 abstract class CryptoViewDataBase : RoomDatabase() {
