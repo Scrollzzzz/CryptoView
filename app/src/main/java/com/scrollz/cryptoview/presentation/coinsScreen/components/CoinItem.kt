@@ -22,11 +22,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
 import coil.request.ImageRequest
+import com.scrollz.cryptoview.R
 import com.scrollz.cryptoview.domain.model.CoinView
 
 @Composable
@@ -67,11 +70,9 @@ fun CoinItem(
                     ) {}
                 },
                 error = {
-                    Surface(
-                        modifier = Modifier.size(32.dp),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.surface
-                    ) {}
+                    this.SubcomposeAsyncImageContent(
+                        painter = painterResource(R.drawable.default_coin)
+                    )
                 },
             )
             Spacer(modifier = Modifier.width(16.dp))

@@ -12,6 +12,7 @@ import com.scrollz.cryptoview.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -37,8 +38,13 @@ class CoinViewModel @Inject constructor(
     private val _ticks = MutableStateFlow<Resource<HistoricalTicks>>(Resource.Loading(null))
     private val _periodFilter = MutableStateFlow<PeriodFilter>(PeriodFilter.Day)
 
+    private var coinID = "NULL"
+    private var getCoinJob: Job? = null
+    private var getHistoricalTicksJob: Job? = null
+
     init {
         savedStateHandle.get<String>("coinID")?.let { id ->
+            coinID = id
             getCoinInfo(id)
             getHistoricalTicks(id)
             filterTicks()
@@ -75,6 +81,8 @@ class CoinViewModel @Inject constructor(
             is CoinEvent.CloseNotificationDialog -> {
                 _coinState.value = _coinState.value.copy(isNotificationDialogVisible = false)
             }
+            is CoinEvent.Refresh -> refresh()
+            is CoinEvent.RefreshChart -> refreshChart()
         }
     }
 
@@ -96,7 +104,8 @@ class CoinViewModel @Inject constructor(
     }
 
     private fun getCoin(id: String) {
-        useCases.getDetailedCoin(id).onEach{ resource ->
+        getCoinJob?.cancel()
+        getCoinJob = useCases.getDetailedCoin(id).onEach{ resource ->
             when(resource) {
                 is Resource.Success -> {
                     _coinState.value = _coinState.value.copy(
@@ -127,7 +136,8 @@ class CoinViewModel @Inject constructor(
     }
 
     private fun getHistoricalTicks(id: String) {
-        useCases.getHistoricalTicks(id).onEach { ticks ->
+        getHistoricalTicksJob?.cancel()
+        getHistoricalTicksJob = useCases.getHistoricalTicks(id).onEach { ticks ->
             _ticks.value = ticks
         }.launchIn(viewModelScope + Dispatchers.IO)
     }
@@ -140,7 +150,7 @@ class CoinViewModel @Inject constructor(
             when(resource) {
                 is Resource.Success -> {
                     val ticks = ticksOverPeriod(resource.data, periodFilter)
-                    if (ticks.size < 7) {
+                    if (ticks.size < 6) {
                         _coinState.value.copy(chartStatus = Status.Error)
                     } else {
                         _coinState.value.copy(
@@ -206,6 +216,15 @@ class CoinViewModel @Inject constructor(
                 useCases.toggleFavorite(id)
             }
         }
+    }
+
+    private fun refresh() {
+        getCoin(coinID)
+        getHistoricalTicks(coinID)
+    }
+
+    private fun refreshChart() {
+        getHistoricalTicks(coinID)
     }
 
 }

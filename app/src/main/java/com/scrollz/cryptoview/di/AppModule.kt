@@ -1,11 +1,13 @@
 package com.scrollz.cryptoview.di
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.scrollz.cryptoview.data.local.CryptoViewDataBase
-import com.scrollz.cryptoview.data.remote.CoinApi
+import com.scrollz.cryptoview.data.remote.CoinMarketCapApi
 import com.scrollz.cryptoview.data.remote.CoinPaprikaApi
 import com.scrollz.cryptoview.data.remote.TimeApi
 import com.scrollz.cryptoview.data.repository.CryptoViewRepositoryImpl
@@ -19,6 +21,7 @@ import com.scrollz.cryptoview.domain.use_case.GetHistoricalTicks
 import com.scrollz.cryptoview.domain.use_case.GetNotification
 import com.scrollz.cryptoview.domain.use_case.IsCoinFavorite
 import com.scrollz.cryptoview.domain.use_case.ToggleFavorite
+import com.scrollz.cryptoview.domain.use_case.UpdateCoinIcons
 import com.scrollz.cryptoview.domain.use_case.UseCases
 import com.scrollz.cryptoview.notification.AlarmScheduler
 import com.scrollz.cryptoview.utils.URL
@@ -79,13 +82,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCoinApi(okHttpClient: OkHttpClient, gson: Gson): CoinApi {
+    fun provideCoinMarketCapApi(okHttpClient: OkHttpClient, gson: Gson): CoinMarketCapApi {
         return Retrofit.Builder()
-            .baseUrl(URL.COIN_API_BASE_URL)
+            .baseUrl(URL.COIN_MARKET_CAP_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .build()
-            .create(CoinApi::class.java)
+            .create(CoinMarketCapApi::class.java)
     }
 
     @Provides
@@ -103,11 +106,11 @@ object AppModule {
     @Singleton
     fun provideCryptoViewRepository(
         coinPaprikaApi: CoinPaprikaApi,
-        coinApi: CoinApi,
+        coinMarketCapApi: CoinMarketCapApi,
         timeApi: TimeApi,
         db: CryptoViewDataBase
     ): CryptoViewRepository {
-        return CryptoViewRepositoryImpl(coinPaprikaApi, coinApi, timeApi, db)
+        return CryptoViewRepositoryImpl(coinPaprikaApi, coinMarketCapApi, timeApi, db)
     }
 
     @Provides
@@ -118,9 +121,16 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideSharedPreference(app: Application): SharedPreferences {
+        return app.getSharedPreferences("cryptoview_shared_preferences", Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    @Singleton
     fun provideCryptoViewUseCases(
         repository: CryptoViewRepository,
-        alarmScheduler: AlarmScheduler
+        alarmScheduler: AlarmScheduler,
+        sharedPreferences: SharedPreferences
     ): UseCases {
         return UseCases(
             getCoins = GetCoins(repository),
@@ -131,7 +141,8 @@ object AppModule {
             toggleFavorite = ToggleFavorite(repository),
             enableNotification = EnableNotification(repository, alarmScheduler),
             disableNotification = DisableNotification(repository, alarmScheduler),
-            getNotification = GetNotification(repository)
+            getNotification = GetNotification(repository),
+            updateCoinIcons = UpdateCoinIcons(repository, sharedPreferences)
         )
     }
 

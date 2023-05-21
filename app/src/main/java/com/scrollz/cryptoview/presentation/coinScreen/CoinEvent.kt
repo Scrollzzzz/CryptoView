@@ -7,4 +7,6 @@ sealed class CoinEvent {
     object DisableNotification: CoinEvent()
     object ShowNotificationDialog: CoinEvent()
     object CloseNotificationDialog: CoinEvent()
+    object Refresh: CoinEvent()
+    object RefreshChart: CoinEvent()
 }

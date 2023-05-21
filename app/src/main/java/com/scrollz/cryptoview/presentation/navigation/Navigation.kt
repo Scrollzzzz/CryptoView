@@ -5,9 +5,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -37,7 +37,7 @@ fun Navigation() {
                 route = Screen.CoinsListScreen.route
             ) {
                 val viewModel = hiltViewModel<CoinsViewModel>()
-                val state by viewModel.coinsState.collectAsState()
+                val state by viewModel.coinsState.collectAsStateWithLifecycle()
                 CoinsScreen(
                     state = state,
                     onEvent = viewModel::onEvent,
@@ -67,7 +67,7 @@ fun Navigation() {
                 )
             ) {
                 val viewModel = hiltViewModel<CoinViewModel>()
-                val state by viewModel.coinState.collectAsState()
+                val state by viewModel.coinState.collectAsStateWithLifecycle()
                 CoinScreen(
                     state = state,
                     onEvent = viewModel::onEvent,

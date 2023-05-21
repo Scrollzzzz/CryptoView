@@ -126,3 +126,17 @@ fun TickDTO.toTick(coinID: String, period: String): Tick {
 
 fun CoinView.contains(query: String) = this.name.contains(query, ignoreCase = true) or
                                         this.symbol.contains(query, ignoreCase = true)
+
+fun List<Coin>.ids(): List<String> {
+    return buildList {
+        for (i in 0..2400 step 100) {
+            add(buildString {
+                this@ids.slice(i..i + 99).forEach {
+                    if (!it.symbol.contains(' ') && !it.symbol.contains('.')) {
+                        append(it.symbol.plus(','))
+                    }
+                }
+            }.dropLast(1))
+        }
+    }
+}

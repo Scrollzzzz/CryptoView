@@ -9,6 +9,7 @@ import com.scrollz.cryptoview.domain.model.Coin
 import com.scrollz.cryptoview.domain.model.DeferredNotification
 import com.scrollz.cryptoview.domain.model.DetailedCoin
 import com.scrollz.cryptoview.domain.model.FavoriteCoin
+import com.scrollz.cryptoview.domain.model.Icon
 import com.scrollz.cryptoview.domain.model.Tick
 import com.scrollz.cryptoview.domain.model.Notification
 import kotlinx.coroutines.flow.Flow
@@ -20,8 +21,17 @@ interface CryptoViewDao {
     @Query("SELECT * FROM coin")
     fun getCoinsList(): Flow<List<Coin>>
 
+    @Query("SELECT symbol, iconUrl FROM coin")
+    suspend fun getCoinIcons(): List<Icon>
+
+    @Query("SELECT iconUrl FROM coin")
+    suspend fun getCoinIconsURLs(): List<String?>
+
     @Insert(entity = Coin::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCoins(coins: List<Coin>)
+
+    @Query("UPDATE coin SET iconUrl = :iconUrl WHERE symbol = :symbol")
+    suspend fun updateCoinIcons(symbol: String, iconUrl: String?)
 
     @Query("DELETE FROM coin")
     suspend fun deleteAllCoins()

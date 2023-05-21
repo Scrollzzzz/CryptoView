@@ -1,19 +1,22 @@
 package com.scrollz.cryptoview.data.repository
 
+import android.util.Log
 import androidx.room.withTransaction
 import com.scrollz.cryptoview.data.local.CryptoViewDataBase
-import com.scrollz.cryptoview.data.remote.CoinApi
+import com.scrollz.cryptoview.data.remote.CoinMarketCapApi
 import com.scrollz.cryptoview.data.remote.CoinPaprikaApi
 import com.scrollz.cryptoview.data.remote.TimeApi
 import com.scrollz.cryptoview.domain.model.Coin
 import com.scrollz.cryptoview.domain.model.DeferredNotification
 import com.scrollz.cryptoview.domain.model.FavoriteCoin
 import com.scrollz.cryptoview.domain.model.HistoricalTicks
+import com.scrollz.cryptoview.domain.model.Icon
 import com.scrollz.cryptoview.domain.model.Notification
 import com.scrollz.cryptoview.domain.repository.CryptoViewRepository
 import com.scrollz.cryptoview.utils.Interval
 import com.scrollz.cryptoview.utils.Period
 import com.scrollz.cryptoview.utils.createDetailedCoin
+import com.scrollz.cryptoview.utils.ids
 import com.scrollz.cryptoview.utils.networkBoundResource
 import com.scrollz.cryptoview.utils.timeForDayTicks
 import com.scrollz.cryptoview.utils.timeForYearTicks
@@ -26,7 +29,7 @@ import javax.inject.Inject
 
 class CryptoViewRepositoryImpl @Inject constructor(
     private val coinPaprikaApi: CoinPaprikaApi,
-    private val coinApi: CoinApi,
+    private val coinMarketCapApi: CoinMarketCapApi,
     private val timeApi: TimeApi,
     private val db: CryptoViewDataBase
 ) : CryptoViewRepository {
@@ -38,12 +41,12 @@ class CryptoViewRepositoryImpl @Inject constructor(
             dao.getCoinsList()
         },
         fetch = {
-            val icons = coinApi.getIcons()
+            val icons = dao.getCoinIcons()
             coinPaprikaApi.getCoins().map { coinDto ->
                 coinDto.toCoin(
                     iconUrl = icons.find {
-                        it.assetId.uppercase() == coinDto.symbol.uppercase()
-                    }?.url
+                        it.symbol == coinDto.symbol
+                    }?.iconUrl
                 )
             }
         },
@@ -55,6 +58,24 @@ class CryptoViewRepositoryImpl @Inject constructor(
         },
         shouldFetch = { true }
     )
+
+    override suspend fun updateCoinIcons(coins: List<Coin>) {
+        val icons = mutableListOf<Icon>()
+        coins.ids().forEach { ids ->
+            try {
+                coinMarketCapApi.getIcons(ids).data.forEach { (_, icon) ->
+                    if (icon.isNotEmpty()) icons.add(icon.first())
+                }
+            } catch (e: Exception) {
+                Log.e("CMCIcons", e.message ?: "err")
+            }
+        }
+        db.withTransaction {
+            icons.forEach { icon ->
+                dao.updateCoinIcons(icon.symbol, icon.iconUrl)
+            }
+        }
+    }
 
     override fun getDetailedCoin(id: String) = networkBoundResource(
         query = {
@@ -100,6 +121,10 @@ class CryptoViewRepositoryImpl @Inject constructor(
             }
         }
     )
+
+    override suspend fun getCoinIconsURLs(): List<String?> {
+        return dao.getCoinIconsURLs()
+    }
 
     override suspend fun getCoin(id: String): Coin {
         return coinPaprikaApi.getCoin(id).toCoin(null)
@@ -153,6 +178,10 @@ class CryptoViewRepositoryImpl @Inject constructor(
             dao.upsertDeferredNotification(deferredNotification)
         }
         return isEmpty
+    }
+
+    override suspend fun getCurrentTime(): String {
+        return timeApi.getCurrentTime().dateTime
     }
 
 }

@@ -3,6 +3,7 @@ package com.scrollz.cryptoview.presentation.coinScreen.components
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,7 +30,10 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.scrollz.cryptoview.R
 import com.scrollz.cryptoview.domain.model.Tick
 import com.scrollz.cryptoview.presentation.common.ErrorBox
 import com.scrollz.cryptoview.presentation.common.LoadingBox
@@ -37,7 +43,8 @@ import com.scrollz.cryptoview.utils.toPriceFormat
 @Composable
 fun PriceChart(
     status: Status,
-    ticks: List<Tick>
+    ticks: List<Tick>,
+    onRefreshClick: () -> Unit
 ) {
     val height = LocalConfiguration.current.screenWidthDp.dp * 3/4
 
@@ -54,12 +61,42 @@ fun PriceChart(
         ) { status ->
             when (status) {
                 is Status.Loading -> {
-                    LoadingBox(backgroundColor = MaterialTheme.colorScheme.surface)
+                    LoadingBox(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.surface)
+                    )
                 }
                 is Status.Error -> {
                     ErrorBox(
-                        backgroundColor = MaterialTheme.colorScheme.surface,
-                        text = "Error"
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(24.dp)
+                            .background(MaterialTheme.colorScheme.surface),
+                        text = {
+                            Text(
+                                text = stringResource(R.string.error_chart_message),
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    textAlign = TextAlign.Center
+                                ),
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        },
+                        button = {
+                            Button(
+                                onClick = onRefreshClick,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.onBackground,
+                                    contentColor = MaterialTheme.colorScheme.background
+                                )
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(vertical = 6.dp),
+                                    text = stringResource(R.string.error_button),
+                                    style = MaterialTheme.typography.displayMedium
+                                )
+                            }
+                        }
                     )
                 }
                 is Status.Normal -> {

@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import javax.inject.Inject
 
@@ -33,7 +34,9 @@ class CoinsViewModel @Inject constructor(
     private val _filter = MutableStateFlow<Filter>(Filter.All)
     private val _searchText = MutableStateFlow("")
 
-    private var job: Job? = null
+    private var getCoinsJob: Job? = null
+    private var updateIconsJob: Job? = null
+    private var iconsUpdated: Boolean = false
 
     init {
         getCoins()
@@ -61,8 +64,18 @@ class CoinsViewModel @Inject constructor(
     }
 
     private fun getCoins() {
-        job?.cancel()
-        job = useCases.getCoins().onEach { result ->
+        iconsUpdated = false
+        getCoinsJob?.cancel()
+        updateIconsJob?.cancel()
+        getCoinsJob = useCases.getCoins().onEach { result ->
+            if (!iconsUpdated && result is Resource.Success) {
+                result.data?.let { coins ->
+                    viewModelScope.launch(Dispatchers.IO) {
+                        useCases.updateCoinIcons(coins)
+                    }
+                    iconsUpdated = true
+                }
+            }
             _coins.value = result
         }.launchIn(viewModelScope + Dispatchers.IO)
     }

@@ -1,23 +1,23 @@
 package com.scrollz.cryptoview.presentation.common
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 
 @Composable
 fun ErrorBox(
-    backgroundColor: Color,
-    text: String
+    modifier: Modifier = Modifier,
+    text: @Composable () -> Unit = {},
+    button: @Composable () -> Unit = {}
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize().background(backgroundColor),
-        contentAlignment = Alignment.Center
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround
     ) {
-        Text(text = text)
+        text()
+        button()
     }
 }

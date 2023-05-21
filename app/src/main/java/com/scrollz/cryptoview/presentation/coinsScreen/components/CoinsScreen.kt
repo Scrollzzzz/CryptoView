@@ -3,6 +3,7 @@ package com.scrollz.cryptoview.presentation.coinsScreen.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.scrollz.cryptoview.presentation.coinsScreen.CoinsEvent
 import com.scrollz.cryptoview.presentation.coinsScreen.CoinsState
@@ -66,7 +68,19 @@ fun CoinsScreen(
     ) { paddingValues ->
         SwipeRefresh(
             state = swipeRefreshState,
-            onRefresh = { onEvent(CoinsEvent.Refresh) }
+            onRefresh = { onEvent(CoinsEvent.Refresh) },
+            indicator = { swipeRefreshState, dp ->
+                if (!isLoading) {
+                    SwipeRefreshIndicator(
+                        state = swipeRefreshState,
+                        refreshTriggerDistance = dp,
+                        fade = false,
+                        backgroundColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+            },
+            indicatorPadding = PaddingValues(paddingValues.calculateTopPadding() + 48.dp)
         ) {
             Column(
                 modifier = Modifier

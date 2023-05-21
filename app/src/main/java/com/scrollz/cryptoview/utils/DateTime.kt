@@ -27,3 +27,8 @@ fun String.toLocalDateTime(): String {
         .toString()
         .replace('T', ' ')
 }
+
+fun String.shouldUpdateIcons(currentTime: String): Boolean {
+    return Instant.parse(currentTime)
+        .minus(24, DateTimeUnit.HOUR) >= Instant.parse(this)
+}

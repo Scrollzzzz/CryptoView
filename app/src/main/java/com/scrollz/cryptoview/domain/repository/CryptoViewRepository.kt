@@ -12,6 +12,10 @@ interface CryptoViewRepository {
 
     fun getCoins(): Flow<Resource<List<Coin>>>
 
+    suspend fun updateCoinIcons(coins: List<Coin>)
+
+    suspend fun getCoinIconsURLs(): List<String?>
+
     fun getDetailedCoin(id: String): Flow<Resource<DetailedCoin?>>
 
     fun getHistoricalTicks(id: String): Flow<Resource<HistoricalTicks>>
@@ -35,5 +39,7 @@ interface CryptoViewRepository {
     suspend fun addDeferredNotificationEmptinessChecking(
         deferredNotification: DeferredNotification
     ): Boolean
+
+    suspend fun getCurrentTime(): String
 
 }

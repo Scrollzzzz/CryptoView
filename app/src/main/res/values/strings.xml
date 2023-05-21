@@ -28,4 +28,7 @@
     <string name="button_add_notification">Add notification</string>
     <string name="button_change_notification_settings">Change notification settings</string>
     <string name="notification_channel_exchange_rates">Exchange rates</string>
+    <string name="error_button">Refresh</string>
+    <string name="error_coin_page_message">Page failed to load</string>
+    <string name="error_chart_message">Chart failed to load</string>
 </resources>

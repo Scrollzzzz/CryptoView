@@ -28,4 +28,7 @@
     <string name="button_add_notification">Добавить уведомление</string>
     <string name="button_change_notification_settings">Изменть настройки уведомления</string>
     <string name="notification_channel_exchange_rates">Курсы обмена</string>
+    <string name="error_button">Обновить</string>
+    <string name="error_coin_page_message">Не удалось загрузить страницу</string>
+    <string name="error_chart_message">Не удалось загрузить график</string>
 </resources>
