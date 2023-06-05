@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
-import android.util.Log
 import com.scrollz.cryptoview.domain.model.DeferredNotification
 import com.scrollz.cryptoview.domain.repository.CryptoViewRepository
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,7 +51,7 @@ class AlarmReceiver : BroadcastReceiver() {
             NetworkRequest.Builder().build(),
             object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
-                    val handler = CoroutineExceptionHandler { _, _ -> Log.e("shit", "ff")}
+                    val handler = CoroutineExceptionHandler { _, _ -> }
                     CoroutineScope(Dispatchers.IO + handler).launch {
                         val deferredNotifications = withContext(Dispatchers.IO) {
                             repository.getDeferredNotificationsDeleting()
